@@ -1,0 +1,391 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "MentorPoints API",
+    "version": "1.0.0",
+    "description": "API para cadastro de ações, cupons e sorteios de prêmios."
+  },
+  "servers": [
+    { "url": "http://localhost:3000" }
+  ],
+  "tags": [
+    { "name": "Autenticação", "description": "Cadastro e login de usuários" },
+    { "name": "Prêmios", "description": "Operações relacionadas a prêmios" },
+    { "name": "Desafios", "description": "Operações relacionadas a desafios" },
+    { "name": "Cupons", "description": "Operações relacionadas a cupons" }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "name": { "type": "string" },
+          "email": { "type": "string" },
+          "classId": { "type": ["string", "null"] },
+          "isAdmin": { "type": "boolean" }
+        },
+        "required": ["id", "name", "email", "isAdmin"]
+      },
+      "UserRegisterRequest": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "email": { "type": "string" },
+          "password": { "type": "string" },
+          "classId": { "type": "string", "description": "Obrigatório para alunos" },
+          "isAdmin": { "type": "boolean" }
+        },
+        "required": ["name", "email", "password"]
+      },
+      "UserLoginRequest": {
+        "type": "object",
+        "properties": {
+          "email": { "type": "string" },
+          "password": { "type": "string" }
+        },
+        "required": ["email", "password"]
+      },
+      "UserLoginResponse": {
+        "type": "object",
+        "properties": {
+          "token": { "type": "string" },
+          "user": { "$ref": "#/components/schemas/User" }
+        },
+        "required": ["token", "user"]
+      },
+      "Prize": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "name": { "type": "string" },
+          "description": { "type": "string" }
+        },
+        "required": ["id", "name", "description"]
+      },
+      "PrizeCreateRequest": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "description": { "type": "string" }
+        },
+        "required": ["name", "description"]
+      },
+      "Challenge": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "classId": { "type": "string" },
+          "extraCoupon": { "type": "boolean" }
+        },
+        "required": ["id", "title", "description", "classId", "extraCoupon"]
+      },
+      "ChallengeCreateRequest": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "classId": { "type": "string" },
+          "extraCoupon": { "type": "boolean" }
+        },
+        "required": ["title", "description", "classId"]
+      },
+      "ChallengeCompleteRequest": {
+        "type": "object",
+        "properties": {
+          "userId": { "type": "integer" },
+          "challengeId": { "type": "integer" },
+          "teamId": { "type": "integer", "description": "Opcional. Necessário para registrar cupom extra de equipe." }
+        },
+        "required": ["userId", "challengeId"]
+      },
+      "ChallengeExtraRequest": {
+        "type": "object",
+        "properties": {
+          "teamId": { "type": "integer" },
+          "challengeId": { "type": "integer" }
+        },
+        "required": ["teamId", "challengeId"]
+      },
+      "Coupon": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "userId": { "type": "integer" },
+          "challengeId": { "type": "integer" },
+          "teamId": { "type": ["integer", "null"] }
+        },
+        "required": ["id", "userId", "challengeId"]
+      },
+      "CouponRemoveRequest": {
+        "type": "object",
+        "properties": {
+          "teamId": { "type": "integer" }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": { "type": "string" }
+        },
+        "required": ["error"],
+        "examples": {
+          "missing_class": { "value": { "error": "O campo turma é obrigatório para alunos" } },
+          "email_exists": { "value": { "error": "Email já cadastrado" } },
+          "not_found": { "value": { "error": "Usuário não encontrado" } },
+          "invalid_password": { "value": { "error": "Senha inválida" } },
+          "unauthorized": { "value": { "error": "Token não fornecido ou inválido" } },
+          "forbidden": { "value": { "error": "Acesso restrito a administradores" } },
+          "validation": { "value": { "error": "Nome, email e senha são obrigatórios" } }
+        }
+      }
+    }
+  },
+  "security": [
+    { "bearerAuth": [] }
+  ],
+  "paths": {
+    "/users/register": {
+      "post": {
+        "tags": ["Autenticação"],
+        "summary": "Cadastrar usuário",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UserRegisterRequest" },
+              "examples": {
+                "aluno": {
+                  "value": { "name": "João", "email": "joao@email.com", "password": "123456", "classId": "A1", "isAdmin": false }
+                },
+                "admin": {
+                  "value": { "name": "Admin", "email": "admin@email.com", "password": "admin123", "isAdmin": true }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Usuário cadastrado", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/User" } } } },
+          "400": { "description": "Erro de validação", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" }, "examples": { "missing_class": { "value": { "error": "O campo turma é obrigatório para alunos" } }, "email_exists": { "value": { "error": "Email já cadastrado" } }, "validation": { "value": { "error": "Nome, email e senha são obrigatórios" } } } } } }
+        }
+      }
+    },
+    "/users/login": {
+      "post": {
+        "tags": ["Autenticação"],
+        "summary": "Login de usuário",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UserLoginRequest" },
+              "example": { "email": "joao@email.com", "password": "123456" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Login realizado", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UserLoginResponse" } } } },
+          "401": { "description": "Credenciais inválidas", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" }, "examples": { "not_found": { "value": { "error": "Usuário não encontrado" } }, "invalid_password": { "value": { "error": "Senha inválida" } } } } } }
+        }
+      }
+    },
+    "/prizes": {
+      "get": {
+        "tags": ["Prêmios"],
+        "summary": "Listar prêmios",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Lista de prêmios", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Prize" } } } } },
+          "401": { "description": "Não autenticado", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" }, "examples": { "unauthorized": { "value": { "error": "Token não fornecido ou inválido" } } } } } }
+        }
+      },
+      "post": {
+        "tags": ["Prêmios"],
+        "summary": "Criar prêmio",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/PrizeCreateRequest" },
+              "example": { "name": "Tablet", "description": "Tablet Samsung" }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Prêmio criado", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Prize" } } } },
+          "400": { "description": "Erro de validação", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" }, "examples": { "validation": { "value": { "error": "Nome e descrição são obrigatórios" } } } } } },
+          "403": { "description": "Acesso negado", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" }, "examples": { "forbidden": { "value": { "error": "Acesso restrito a administradores" } } } } } }
+        }
+      }
+    },
+    "/challenges/{classId}": {
+      "get": {
+        "tags": ["Desafios"],
+        "summary": "Listar desafios por turma",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "classId", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Lista de desafios", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Challenge" } } } } },
+          "401": { "description": "Não autenticado", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" }, "examples": { "unauthorized": { "value": { "error": "Token não fornecido ou inválido" } } } } } }
+        }
+      }
+    },
+    "/challenges": {
+      "post": {
+        "tags": ["Desafios"],
+        "summary": "Criar desafio",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ChallengeCreateRequest" },
+              "example": { "title": "Desafio 1", "description": "Descrição do desafio", "classId": "A1", "extraCoupon": false }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Desafio criado", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Challenge" } } } },
+          "400": { "description": "Erro de validação", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" }, "examples": { "validation": { "value": { "error": "Título, descrição e turma são obrigatórios" } } } } } },
+          "403": { "description": "Acesso negado", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" }, "examples": { "forbidden": { "value": { "error": "Acesso restrito a administradores" } } } } } }
+        }
+      }
+    },
+    "/challenges/{id}": {
+      "delete": {
+        "tags": ["Desafios"],
+        "summary": "Remover desafio",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "204": { "description": "Desafio removido" },
+          "400": { "description": "Erro de validação", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+          "403": { "description": "Acesso negado", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }
+        }
+      },
+      "put": {
+        "tags": ["Desafios"],
+        "summary": "Atualizar desafio",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Challenge" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Desafio atualizado", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Challenge" } } } },
+          "400": { "description": "Erro de validação", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" }, "examples": { "validation": { "value": { "error": "Título, descrição e turma são obrigatórios" } } } } } },
+          "403": { "description": "Acesso negado", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" }, "examples": { "forbidden": { "value": { "error": "Acesso restrito a administradores" } } } } } }
+        }
+      }
+    },
+    "/challenges/complete": {
+      "post": {
+        "tags": ["Desafios"],
+        "summary": "Registrar conclusão de desafio",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ChallengeCompleteRequest" },
+              "example": { "userId": 1, "challengeId": 2, "teamId": 12 }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Desafio concluído e cupom gerado", "content": { "application/json": { "schema": { "type": "object", "properties": { "message": { "type": "string", "example": "Desafio concluído e cupom gerado" } } } } } },
+          "400": { "description": "Erro de validação", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" }, "examples": { "validation": { "value": { "error": "Usuário e desafio são obrigatórios" } } } } } },
+          "403": { "description": "Acesso negado", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" }, "examples": { "forbidden": { "value": { "error": "Acesso restrito a administradores" } } } } } }
+        }
+      }
+    },
+    "/coupons/{userId}": {
+      "get": {
+        "tags": ["Cupons"],
+        "summary": "Listar cupons por usuário",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "userId", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Lista de cupons", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Coupon" } } } } },
+          "401": { "description": "Não autenticado", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" }, "examples": { "unauthorized": { "value": { "error": "Token não fornecido ou inválido" } } } } } }
+        }
+      }
+    },
+    "/coupons/{id}": {
+      "delete": {
+        "tags": ["Cupons"],
+        "summary": "Remover cupom de um único usuário",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "204": { "description": "Cupom removido" },
+          "400": { "description": "Erro de validação", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" }, "examples": { "validation": { "value": { "error": "ID do cupom inválido" } } } } } },
+          "403": { "description": "Acesso negado", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" }, "examples": { "forbidden": { "value": { "error": "Acesso restrito a administradores" } } } } } }
+        }
+      }
+    },
+    "/admin/students": {
+      "get": {
+        "tags": ["Autenticação"],
+        "summary": "Listar alunos (apenas admin)",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Lista de alunos (id e nome)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "integer" },
+                      "name": { "type": "string" }
+                    },
+                    "required": ["id", "name"]
+                  }
+                },
+                "example": [ { "id": 2, "name": "João" } ]
+              }
+            }
+          },
+          "403": {
+            "description": "Acesso negado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" },
+                "examples": { "forbidden": { "value": { "error": "Acesso restrito a administradores" } } }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

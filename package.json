@@ -1,10 +1,11 @@
 {
   "name": "ppp-mentor-points",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "API Rest para gerenciar ações que geram cupons para alunos.",
+  "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
   },
   "repository": {
     "type": "git",
@@ -17,5 +18,14 @@
   "bugs": {
     "url": "https://github.com/ilanaalc/ppp-mentor-points/issues"
   },
-  "homepage": "https://github.com/ilanaalc/ppp-mentor-points#readme"
+  "homepage": "https://github.com/ilanaalc/ppp-mentor-points#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+  "swagger-ui-express": "^5.0.1",
+    "bcryptjs": "^2.4.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
 }
