@@ -6,6 +6,12 @@ function listCouponsByUser(req, res) {
   res.json(coupons);
 }
 
+function listCouponsByClass(req, res) {
+  const { classId } = req.params;
+  const coupons = couponService.listCouponsByClass(classId);
+  res.json(coupons);
+}
+
 function removeCoupon(req, res) {
   try {
     couponService.removeCoupon(req.params.id);
@@ -15,4 +21,4 @@ function removeCoupon(req, res) {
   }
 }
 
-module.exports = { listCouponsByUser, removeCoupon };
+module.exports = { listCouponsByUser, listCouponsByClass, removeCoupon };

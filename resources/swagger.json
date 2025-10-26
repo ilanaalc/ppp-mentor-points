@@ -10,6 +10,7 @@
   ],
   "tags": [
     { "name": "Autenticação", "description": "Cadastro e login de usuários" },
+    { "name": "Alunos", "description": "Operações relacionadas a alunos" },
     { "name": "Prêmios", "description": "Operações relacionadas a prêmios" },
     { "name": "Desafios", "description": "Operações relacionadas a desafios" },
     { "name": "Cupons", "description": "Operações relacionadas a cupons" }
@@ -125,6 +126,17 @@
           "teamId": { "type": ["integer", "null"] }
         },
         "required": ["id", "userId", "challengeId"]
+      },
+      "CouponWithUserName": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "userId": { "type": "integer" },
+          "challengeId": { "type": "integer" },
+          "teamId": { "type": ["integer", "null"] },
+          "userName": { "type": "string" }
+        },
+        "required": ["id", "userId", "challengeId", "userName"]
       },
       "CouponRemoveRequest": {
         "type": "object",
@@ -321,6 +333,21 @@
         }
       }
     },
+    "/coupons/class/{classId}": {
+      "get": {
+        "tags": ["Cupons"],
+        "summary": "Listar todos os cupons de uma turma",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "classId", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Lista de cupons da turma", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/CouponWithUserName" } } } } },
+          "401": { "description": "Não autenticado", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" }, "examples": { "unauthorized": { "value": { "error": "Token não fornecido ou inválido" } } } } } },
+          "403": { "description": "Acesso negado", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" }, "examples": { "forbidden": { "value": { "error": "Acesso restrito a administradores" } } } } } }
+        }
+      }
+    },
     "/coupons/{userId}": {
       "get": {
         "tags": ["Cupons"],
@@ -352,7 +379,7 @@
     },
     "/admin/students": {
       "get": {
-        "tags": ["Autenticação"],
+        "tags": ["Alunos"],
         "summary": "Listar alunos (apenas admin)",
         "security": [{ "bearerAuth": [] }],
         "responses": {
@@ -372,6 +399,47 @@
                   }
                 },
                 "example": [ { "id": 2, "name": "João" } ]
+              }
+            }
+          },
+          "403": {
+            "description": "Acesso negado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" },
+                "examples": { "forbidden": { "value": { "error": "Acesso restrito a administradores" } } }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/students/class/{classId}": {
+      "get": {
+        "tags": ["Alunos"],
+        "summary": "Listar alunos de uma turma (apenas admin)",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "classId", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de alunos da turma",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "integer" },
+                      "name": { "type": "string" },
+                      "classId": { "type": "string" }
+                    },
+                    "required": ["id", "name", "classId"]
+                  }
+                },
+                "example": [ { "id": 2, "name": "João", "classId": "A1" } ]
               }
             }
           },

@@ -15,6 +15,10 @@ function listCouponsByUser(userId) {
   return db.coupons.filter(c => c.userId == userId);
 }
 
+function listCouponsByUserIds(userIds) {
+  return db.coupons.filter(c => userIds.includes(c.userId));
+}
+
 function removeCoupon(id) {
   const idx = db.coupons.findIndex(c => c.id == id);
   if (idx !== -1) db.coupons.splice(idx, 1);
@@ -24,4 +28,4 @@ function removeCouponsByTeam(teamId) {
   db.coupons = db.coupons.filter(c => c.teamId != teamId);
 }
 
-module.exports = { createCoupon, listCouponsByUser, removeCoupon, removeCouponsByTeam };
+module.exports = { createCoupon, listCouponsByUser, listCouponsByUserIds, removeCoupon, removeCouponsByTeam };

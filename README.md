@@ -48,11 +48,13 @@ API REST para cadastro de ações, cupons e sorteios de prêmios para alunos, co
       ```
 
 ### Cupons
+- `GET /coupons/class/{classId}` — Listar todos os cupons de uma turma (admin)
 - `GET /coupons/{userId}` — Listar cupons de um usuário
 - `DELETE /coupons/{id}` — Remover cupom de um único usuário
 
 ### Admin
 - `GET /admin/students` — Listar alunos (apenas admin)
+- `GET /admin/students/class/{classId}` — Listar alunos de uma turma (apenas admin)
 
 ## Observações importantes
 - O campo `teamId` agora é corretamente preenchido ao registrar conclusão de desafio, se existir para o usuário.
