@@ -38,16 +38,15 @@ API REST para cadastro de ações, cupons e sorteios de prêmios para alunos, co
 - `PUT /challenges/{id}` — Atualizar desafio (admin)
 - `DELETE /challenges/{id}` — Remover desafio (admin)
 - `POST /challenges/complete` — Registrar conclusão de desafio (admin)
-   - Exemplo:
-      ```json
-      {
-         "userId": 2,
-         "challengeId": 1,
-         "teamId": 12 // opcional, será preenchido automaticamente se o usuário tiver teamId
-      }
-      ```
-
-### Cupons
+  - Exemplo:
+    ```json
+    {
+      "userId": 2,
+      "challengeId": 1,
+      "challengeTitle": "Desafio 1",
+      "teamId": 12 // opcional, será preenchido automaticamente se o usuário tiver teamId
+    }
+    ```### Cupons
 - `GET /coupons/class/{classId}` — Listar todos os cupons de uma turma (autenticado)
 - `GET /coupons/{userId}` — Listar cupons de um usuário
 - `DELETE /coupons/{id}` — Remover cupom de um único usuário

@@ -19,8 +19,14 @@ function updateChallenge(id, data) {
   return challengeModel.updateChallenge(id, data);
 }
 
-function completeChallenge({ userId, challengeId, teamId }) {
-  if (!userId || !challengeId) throw new Error('Usuário e desafio são obrigatórios');
+function completeChallenge({ userId, challengeId, teamId, challengeTitle }) {
+  if (!userId || !challengeId || !challengeTitle) throw new Error('Usuário, desafio e título do desafio são obrigatórios');
+  
+  // Verificar se o desafio existe e se o título corresponde
+  const challenge = challengeModel.findChallengeById(challengeId);
+  if (!challenge) throw new Error('Desafio não encontrado');
+  if (challenge.title !== challengeTitle) throw new Error('Título do desafio não confere');
+  
   // Se teamId não for informado, tenta buscar do usuário
   let resolvedTeamId = teamId;
   if (typeof resolvedTeamId === 'undefined' || resolvedTeamId === null) {

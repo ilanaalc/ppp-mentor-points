@@ -105,9 +105,10 @@
         "properties": {
           "userId": { "type": "integer" },
           "challengeId": { "type": "integer" },
+          "challengeTitle": { "type": "string", "description": "Título do desafio para validação." },
           "teamId": { "type": "integer", "description": "Opcional. Necessário para registrar cupom extra de equipe." }
         },
-        "required": ["userId", "challengeId"]
+        "required": ["userId", "challengeId", "challengeTitle"]
       },
       "ChallengeExtraRequest": {
         "type": "object",
@@ -322,13 +323,13 @@
           "content": {
             "application/json": {
               "schema": { "$ref": "#/components/schemas/ChallengeCompleteRequest" },
-              "example": { "userId": 1, "challengeId": 2, "teamId": 12 }
+              "example": { "userId": 1, "challengeId": 2, "challengeTitle": "Desafio 1", "teamId": 12 }
             }
           }
         },
         "responses": {
           "200": { "description": "Desafio concluído e cupom gerado", "content": { "application/json": { "schema": { "type": "object", "properties": { "message": { "type": "string", "example": "Desafio concluído e cupom gerado" } } } } } },
-          "400": { "description": "Erro de validação", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" }, "examples": { "validation": { "value": { "error": "Usuário e desafio são obrigatórios" } } } } } },
+          "400": { "description": "Erro de validação", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" }, "examples": { "validation": { "value": { "error": "Usuário, desafio e título do desafio são obrigatórios" } }, "invalid_title": { "value": { "error": "Título do desafio não confere" } }, "not_found": { "value": { "error": "Desafio não encontrado" } } } } } },
           "403": { "description": "Acesso negado", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" }, "examples": { "forbidden": { "value": { "error": "Acesso restrito a administradores" } } } } } }
         }
       }
