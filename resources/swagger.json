@@ -384,7 +384,7 @@
         "security": [{ "bearerAuth": [] }],
         "responses": {
           "200": {
-            "description": "Lista de alunos (id e nome)",
+            "description": "Lista de alunos (id, nome, email e turma)",
             "content": {
               "application/json": {
                 "schema": {
@@ -393,12 +393,14 @@
                     "type": "object",
                     "properties": {
                       "id": { "type": "integer" },
-                      "name": { "type": "string" }
+                      "name": { "type": "string" },
+                      "email": { "type": "string" },
+                      "classId": { "type": "string" }
                     },
-                    "required": ["id", "name"]
+                    "required": ["id", "name", "email", "classId"]
                   }
                 },
-                "example": [ { "id": 2, "name": "João" } ]
+                "example": [ { "id": 2, "name": "João", "email": "joao@email.com", "classId": "A1" } ]
               }
             }
           },

@@ -3,7 +3,7 @@ const db = require('../models/db');
 function listStudents(req, res) {
   const students = db.users
     .filter(u => !u.isAdmin)
-    .map(u => ({ id: u.id, name: u.name }));
+    .map(u => ({ id: u.id, name: u.name, email: u.email, classId: u.classId }));
   res.json(students);
 }
 
