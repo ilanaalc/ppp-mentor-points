@@ -343,8 +343,7 @@
         ],
         "responses": {
           "200": { "description": "Lista de cupons da turma", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/CouponWithUserName" } } } } },
-          "401": { "description": "Não autenticado", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" }, "examples": { "unauthorized": { "value": { "error": "Token não fornecido ou inválido" } } } } } },
-          "403": { "description": "Acesso negado", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" }, "examples": { "forbidden": { "value": { "error": "Acesso restrito a administradores" } } } } } }
+          "401": { "description": "Não autenticado", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" }, "examples": { "unauthorized": { "value": { "error": "Token não fornecido ou inválido" } } } } } }
         }
       }
     },

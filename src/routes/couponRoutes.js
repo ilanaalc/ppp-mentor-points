@@ -4,7 +4,7 @@ const { authenticateJWT, isAdmin } = require('../middleware/auth');
 
 const router = express.Router();
 
-router.get('/class/:classId', authenticateJWT, isAdmin, listCouponsByClass);
+router.get('/class/:classId', authenticateJWT, listCouponsByClass);
 router.get('/:userId', authenticateJWT, listCouponsByUser);
 router.delete('/:id', authenticateJWT, isAdmin, removeCoupon);
 

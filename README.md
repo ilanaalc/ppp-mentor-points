@@ -48,7 +48,7 @@ API REST para cadastro de ações, cupons e sorteios de prêmios para alunos, co
       ```
 
 ### Cupons
-- `GET /coupons/class/{classId}` — Listar todos os cupons de uma turma (admin)
+- `GET /coupons/class/{classId}` — Listar todos os cupons de uma turma (autenticado)
 - `GET /coupons/{userId}` — Listar cupons de um usuário
 - `DELETE /coupons/{id}` — Remover cupom de um único usuário
 
