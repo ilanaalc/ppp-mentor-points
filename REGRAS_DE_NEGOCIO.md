@@ -48,9 +48,7 @@
 ## ⚙️ 6. INTEGRIDADE
 
 - **RN17** - Título do desafio deve ser confirmado na conclusão (evita erros)
-- **RN18** - Sistema busca automaticamente teamId do usuário se não informado
-- **RN19** - Todas as operações filtram por turma quando aplicável
-- **RN20** - Dados são convertidos para string nas comparações (consistência)
+- **RN18** - Todas as operações filtram por turma quando aplicável
 
 ---
 
