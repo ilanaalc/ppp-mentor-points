@@ -4,14 +4,7 @@
 
 ---
 
-## 👤 1. USUÁRIOS
-
-- **RN01** - Email deve ser único no sistema
-- **RN02** - Alunos devem ter turma obrigatória, administradores não
-- **RN03** - Senhas são criptografadas e nunca expostas
-- **RN04** - Token JWT válido por 24 horas para autenticação
-
-## 🔐 2. CONTROLE DE ACESSO
+## 🔐 1. CONTROLE DE ACESSO
 
 ### 👨‍💼 Apenas administradores podem:
 - Criar/editar/remover desafios
@@ -24,6 +17,14 @@
 - Desafios de sua turma
 - Cupons próprios e da turma
 - Prêmios disponíveis
+
+
+## 👤 2. USUÁRIOS
+
+- **RN01** - Email deve ser único no sistema
+- **RN02** - Alunos devem ter turma obrigatória, administradores não
+- **RN03** - Senhas são criptografadas e nunca expostas
+- **RN04** - Token JWT válido por 24 horas para autenticação
 
 ## 🎯 3. DESAFIOS
 
@@ -47,9 +48,7 @@
 ## ⚙️ 6. INTEGRIDADE
 
 - **RN17** - Título do desafio deve ser confirmado na conclusão (evita erros)
-- **RN18** - Sistema busca automaticamente teamId do usuário se não informado
-- **RN19** - Todas as operações filtram por turma quando aplicável
-- **RN20** - Dados são convertidos para string nas comparações (consistência)
+- **RN18** - Todas as operações filtram por turma quando aplicável
 
 ---
 
