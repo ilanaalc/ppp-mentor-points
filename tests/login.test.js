@@ -5,7 +5,7 @@ require('dotenv').config();
 
 describe('Login', () => {
     describe('POST /users/login', () => {
-        it('Deve retornar 200 e um token JWT ao informar credenciais válidas de um usuário com perfil de aluno', async () => {
+        it('007 - Deve retornar 200 e um token JWT ao informar credenciais válidas de um usuário com perfil de aluno', async () => {
             await cadastrarAluno();
 
             const response = await request(process.env.API_BASE_URL)
@@ -20,7 +20,7 @@ describe('Login', () => {
             expect (response.body).to.have.property('token');
         });
         
-        it('Deve retornar 200 e um token JWT ao informar credenciais válidas de um usuário com perfil administrador', async () => {
+        it('008 - Deve retornar 200 e um token JWT ao informar credenciais válidas de um usuário com perfil administrador', async () => {
             await cadastrarAdmin();
 
             const response = await request(process.env.API_BASE_URL)
@@ -35,7 +35,7 @@ describe('Login', () => {
             expect (response.body).to.have.property('token');
         });
 
-        it('Deve retornar 400 por ausência de campos obrigatórios ao realizar o login', async () => {
+        it('009 - Deve retornar 400 por ausência de campos obrigatórios ao realizar o login', async () => {
             const response = await request(process.env.API_BASE_URL)
             .post('/users/login')
             .set('Content-Type', 'application/json')
@@ -48,7 +48,7 @@ describe('Login', () => {
             expect (response.body.error).to.be.equal('E-mail e senha são obrigatórios');
         });
 
-        it('Deve retornar 401 e mensagem de erro ao informar credenciais inválidas', async () => {
+        it('010 - Deve retornar 401 e mensagem de erro ao informar credenciais inválidas', async () => {
             const response = await request(process.env.API_BASE_URL)
             .post('/users/login')
             .set('Content-Type', 'application/json')

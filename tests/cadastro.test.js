@@ -6,7 +6,7 @@ require('dotenv').config();
 
 describe ('Cadastro de Usuário', () => {
     describe ('POST /users/register', () => {
-        it ('Deve retornar 201 e um id ao informar todos os dados obrigatórios de um aluno', async () => {
+        it ('001 - Deve retornar 201 e um id ao informar todos os dados obrigatórios de um aluno', async () => {
             const response = await request(process.env.API_BASE_URL)
             .post('/users/register')
             .set('Content-Type', 'application/json')
@@ -18,11 +18,11 @@ describe ('Cadastro de Usuário', () => {
                 isAdmin: false
             });
 
-            expect (response.statusCode).to.be.eql(201);
-            expect (response.body).to.have.property('id');
+            expect(response.statusCode).to.be.eql(201);
+            expect(response.body).to.have.property('id');
         });
 
-        it ('Deve retornar 201 e um id ao informar todos os dados obrigatórios de um administrador', async () => {
+        it ('002 - Deve retornar 201 e um id ao informar todos os dados obrigatórios de um administrador', async () => {
             const response = await request(process.env.API_BASE_URL)
 
             .post('/users/register')
@@ -35,11 +35,11 @@ describe ('Cadastro de Usuário', () => {
                 isAdmin: true
             });
 
-            expect (response.statusCode).to.be.eql(201);
-            expect (response.body).to.have.property('id');
+            expect(response.statusCode).to.be.eql(201);
+            expect(response.body).to.have.property('id');
         });
 
-        it ('Deve retornar 400 por ausência de informação obrigatória ao realizar cadastro de um aluno sem informar a turma', async () => {
+        it ('003 - Deve retornar 400 por ausência de informação obrigatória ao realizar cadastro de um aluno sem informar a turma', async () => {
             const response = await request(process.env.API_BASE_URL)
 
             .post('/users/register')
@@ -52,11 +52,11 @@ describe ('Cadastro de Usuário', () => {
                 isAdmin: false
             });
 
-            expect (response.statusCode).to.be.eql(400);
-            expect (response.body.error).to.equal('O campo turma é obrigatório para alunos');
+            expect(response.statusCode).to.be.eql(400);
+            expect(response.body.error).to.equal('O campo turma é obrigatório para alunos');
         });
 
-        it ('Deve retornar 400 por ausência de campos obrigatórios ao cadastrar um novo usuário', async () => {
+        it ('004 - Deve retornar 400 por ausência de campos obrigatórios ao cadastrar um novo usuário', async () => {
             const response = await request(process.env.API_BASE_URL)
 
             .post('/users/register')
@@ -69,11 +69,11 @@ describe ('Cadastro de Usuário', () => {
                 isAdmin: false
             });
 
-            expect (response.statusCode).to.be.eql(400);
-            expect (response.body.error).to.equal('Nome, email e senha são obrigatórios');
+            expect(response.statusCode).to.be.eql(400);
+            expect(response.body.error).to.equal('Nome, email e senha são obrigatórios');
         });
 
-        it ('Deve retornar 400 por cadastro de usuário com domínio de e-mail inválido', async () => {
+        it ('005 - Deve retornar 400 por cadastro de usuário com domínio de e-mail inválido', async () => {
             const response = await request(process.env.API_BASE_URL)
 
             .post('/users/register')
@@ -86,10 +86,10 @@ describe ('Cadastro de Usuário', () => {
                 isAdmin: true
             });
 
-            expect (response.statusCode).to.be.eql(400);
-            expect (response.body.error).to.equal('O domínio de e-mail informado não é válido');
+            expect(response.statusCode).to.be.eql(400);
+            expect(response.body.error).to.equal('O domínio de e-mail informado não é válido');
         });
-        it ('Deve retornar 400 por cadastro de usuário com um e-mail já utilizado', async () => {
+        it ('006 - Deve retornar 400 por cadastro de usuário com um e-mail já utilizado', async () => {
             await cadastrarAdmin();
             
             const response = await request(process.env.API_BASE_URL)
@@ -103,8 +103,8 @@ describe ('Cadastro de Usuário', () => {
                 isAdmin: true
             });
 
-            expect (response.statusCode).to.be.eql(400);
-            expect (response.body.error).to.equal('Email já cadastrado');
+            expect(response.statusCode).to.be.eql(400);
+            expect(response.body.error).to.equal('Email já cadastrado');
         });
     });
 });
