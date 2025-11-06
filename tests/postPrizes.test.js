@@ -58,7 +58,7 @@ describe('Cadastrar Prêmios', () => {
                 .send(postPremio);
 
             expect(response.statusCode).to.be.eql(400);
-            expect(response.body).to.have.property('O prêmio informado existe');
+            expect(response.body).to.have.property('O prêmio informado já existe');
         });
     });
 });
