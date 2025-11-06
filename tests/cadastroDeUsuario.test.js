@@ -1,5 +1,6 @@
 const request = require('supertest');
 const { expect } = require('chai');
+require('dotenv').config();
 const { cadastrarUsuario } = require('../helpers/cadastrarUsuario')
 
 
@@ -7,7 +8,6 @@ describe ('Cadastro de Usuário', () => {
     describe ('POST /users/register', () => {
         it ('Deve retornar 201 e um id ao informar todos os dados obrigatórios de um aluno', async () => {
             const response = await request(process.env.API_BASE_URL)
-
             .post('/users/register')
             .set('Content-Type', 'application/json')
             .send({
@@ -67,7 +67,7 @@ describe ('Cadastro de Usuário', () => {
                 password: '',
                 classId: '',
                 isAdmin: false
-            })
+            });
 
             expect (response.statusCode).to.be.eql(400);
             expect (response.body.error).to.equal('Nome, email e senha são obrigatórios');
@@ -84,15 +84,14 @@ describe ('Cadastro de Usuário', () => {
                 password: '123456',
                 classId: 'T1',
                 isAdmin: true
-            })
+            });
 
             expect (response.statusCode).to.be.eql(400);
             expect (response.body.error).to.equal('O domínio de e-mail informado não é válido');
-        })
+        });
         it ('Deve retornar 400 por cadastro de usuário com um e-mail já utilizado', async () => {
-            cadastrarUsuario();
+            await cadastrarUsuario();
             const response = await request(process.env.API_BASE_URL)
-
             .post('/users/register')
             .set('Content-Type', 'application/json')
             .send({
@@ -105,6 +104,6 @@ describe ('Cadastro de Usuário', () => {
 
             expect (response.statusCode).to.be.eql(400);
             expect (response.body.error).to.equal('Email já cadastrado');
-        })
+        });
     });
 });
