@@ -2,7 +2,6 @@ const request = require('supertest');
 const { expect } = require('chai');
 const { cadastrarAdmin, cadastrarAluno } = require('../helpers/cadastrarUsuario');
 const { gerarTokenAdmin, gerarTokenAluno } = require('../helpers/gerarToken');
-
 require('dotenv').config();
 
 describe('Consultar Desafios por Turma', () => {

@@ -3,7 +3,6 @@ const { expect } = require('chai');
 const { cadastrarAdmin } = require('../helpers/cadastrarUsuario')
 require('dotenv').config();
 
-
 describe ('Cadastro de Usuário', () => {
     describe ('POST /users/register', () => {
         it ('001 - Deve retornar 201 e um id ao informar todos os dados obrigatórios de um aluno', async () => {
