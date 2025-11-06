@@ -8,7 +8,7 @@ require('dotenv').config();
 
 describe('Cadastrar Desafios', () => {
     describe('POST /challenges', () => {
-        it('013 - Deve retornar 201 e um id ao cadastrar um desafio informando todos os dados obrigatórios válidos', async () => {
+        it('013 - Deve retornar 201 e um id ao cadastrar um desafio informando todos os dados obrigatórios válidos por um usuário administrador', async () => {
             await cadastrarAdmin();
             let token = await gerarTokenAdmin();
 
