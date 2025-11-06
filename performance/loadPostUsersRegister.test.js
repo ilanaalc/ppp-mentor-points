@@ -1,12 +1,10 @@
 import http from 'k6/http';
 import {check, sleep} from 'k6';
 import { obterBaseURL } from '../utils/variaveis.js';
-import { cadastrarUsuarioK6 } from '../helpers/cadastrarUsuario.js';
 
 export const options = {
-        // vus: 10,
-        // duration: '30s',
-        iterations: 1,
+        vus: 10,
+        duration: '30s',
 
     thresholds: {
         http_req_duration: ['p(95)<2000'],
@@ -15,11 +13,13 @@ export const options = {
 }
 
 export default function() {
-    cadastrarUsuarioK6();
-    const url = obterBaseURL() + '/users/login';
+    const url = obterBaseURL() + '/users/register';
     const payload = JSON.stringify({
-        email: 'julio@mentoria.com',
+        name: `user_${Math.random()}`,
+        email: `user_${Math.random()}@alunomentoria.com`,
         password: '123456',
+        classId: 'T2',
+        isAdmin: false
     })
 
     const params = {
@@ -31,7 +31,7 @@ export default function() {
     const res = http.post(url, payload, params);
 
     check (res, {
-        'O status code deve ser 200': (r) => r.status === 200,
+        'O status code deve ser 201': (r) => r.status === 201,
     });
 
     sleep(1);
