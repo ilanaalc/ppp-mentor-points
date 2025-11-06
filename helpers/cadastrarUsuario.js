@@ -1,37 +1,29 @@
 const request = require('supertest');
+const postCadastroAdmin = require('../fixtures/postCadastroAdmin.json');
+const postCadastroAluno = require('../fixtures/postCadastroAluno.json');
 require('dotenv').config();
 
-async function cadastrarUsuarioAdmin() {
+const cadastrarAdmin= async () => {
+    const bodyUsersRegister = {...postCadastroAdmin}
     const response = await request(process.env.API_BASE_URL)
         .post('/users/register')
         .set('Content-Type', 'application/json')
-        .send({
-            name: "Julio",
-            email: "julio@mentoria.com",
-            password: "123456",
-            classId: "",
-            isAdmin: true
-        });
+        .send(bodyUsersRegister);
 
     return response;
 }
 
-async function cadastrarUsuarioEstudante() {
+const cadastrarAluno= async () => {
+    const bodyUsersRegister = {...postCadastroAluno}
     const response = await request(process.env.API_BASE_URL)
         .post('/users/register')
         .set('Content-Type', 'application/json')
-        .send({
-            name: "Ana",
-            email: "ana@alunomentoria.com",
-            password: "123456",
-            classId: "T2",
-            isAdmin: false
-        });
+        .send(bodyUsersRegister);
 
     return response;
 }
 
 module.exports = {
-    cadastrarUsuarioAdmin,
-    cadastrarUsuarioEstudante
+    cadastrarAdmin,
+    cadastrarAluno,
 }

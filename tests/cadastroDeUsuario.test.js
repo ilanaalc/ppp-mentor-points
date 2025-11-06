@@ -1,7 +1,7 @@
 const request = require('supertest');
 const { expect } = require('chai');
+const { cadastrarAdmin } = require('../helpers/cadastrarUsuario')
 require('dotenv').config();
-const { cadastrarUsuario, cadastrarUsuarioAdmin } = require('../helpers/cadastrarUsuario')
 
 
 describe ('Cadastro de Usuário', () => {
@@ -29,7 +29,7 @@ describe ('Cadastro de Usuário', () => {
             .set('Content-Type', 'application/json')
             .send({
                 name: `user_${Math.random()}`,
-                email: `user_${Math.random()}@alunomentoria.com`,
+                email: `user_${Math.random()}@mentoria.com`,
                 password: '123456',
                 classId: '',
                 isAdmin: true
@@ -90,7 +90,8 @@ describe ('Cadastro de Usuário', () => {
             expect (response.body.error).to.equal('O domínio de e-mail informado não é válido');
         });
         it ('Deve retornar 400 por cadastro de usuário com um e-mail já utilizado', async () => {
-            await cadastrarUsuarioAdmin();
+            await cadastrarAdmin();
+            
             const response = await request(process.env.API_BASE_URL)
             .post('/users/register')
             .set('Content-Type', 'application/json')
