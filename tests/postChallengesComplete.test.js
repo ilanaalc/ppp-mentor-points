@@ -131,5 +131,25 @@ describe('Completar Desafios', () => {
             expect(response.statusCode).to.be.eql(200);
             expect(response.body.message).to.be.equal('Desafio concluído e cupom gerado');
         });
+
+        it('042 - Deve retornar 403 e uma mensagem de operação não permitida ao registrar a conclusão de um desafio para um administrador', async () => {
+            await cadastrarAdmin();
+            let token = await gerarTokenAdmin();
+            await cadastrarDesafioComCupomExtra();
+
+            const response = await request(process.env.API_BASE_URL)
+                .post('/challenges/complete')
+                .set('Content-Type', 'application/json')
+                .set('Authorization', `Bearer ${token}`)
+                .send({
+                    userId: 1,
+                    challengeId: 2,
+                    challengeTitle: 'Desafio 2 - Testes de API Rest com Cypress',
+                    teamId: ''
+                });
+
+            expect(response.statusCode).to.be.eql(403);
+            expect(response.body.message).to.be.equal('Acesso não permitido: Os cupons só podem ser gerados para alunos');
+        });        
     });
 });
