@@ -16,7 +16,7 @@ describe('Atualizar Desafios', () => {
             .put('/challenges/1')
             .set('Content-Type', 'application/json')
             .set('Authorization', `Bearer ${token}`)
-            .send(pos)
+            .send(postDesafiosSemCupomExtra)
             expect(response.statusCode).to.be.eql(200);
         });
 

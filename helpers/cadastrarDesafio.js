@@ -1,4 +1,6 @@
 const request = require('supertest');
+const { cadastrarAdmin } = require('../helpers/cadastrarUsuario');
+const { gerarTokenAdmin } = require('../helpers/gerarToken');
 const postDesafiosSemCupomExtra = require('../fixtures/postDesafiosSemCupomExtra.json');
 const postDesafiosComCupomExtra = require('../fixtures/postDesafiosComCupomExtra.json');
 require('dotenv').config();
