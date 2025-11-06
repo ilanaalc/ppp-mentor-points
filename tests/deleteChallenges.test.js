@@ -2,8 +2,6 @@ const request = require('supertest');
 const { expect } = require('chai');
 const { cadastrarAdmin, cadastrarAluno } = require('../helpers/cadastrarUsuario');
 const { gerarTokenAdmin, gerarTokenAluno } = require('../helpers/gerarToken');
-const postDesafiosSemCupomExtra = require('../fixtures/postDesafiosSemCupomExtra.json');
-const postDesafiosComCupomExtra = require('../fixtures/postDesafiosSemCupomExtra.json');
 require('dotenv').config();
 
 describe('Remover Desafios', () => {
@@ -44,6 +42,16 @@ describe('Remover Desafios', () => {
 
             expect(response.statusCode).to.be.eql(400);
             expect(response.body.error).to.be.equal('O desafio informado não existe');
+        });
+
+        it('030 - Deve retornar 401 e mensagem de token não informado ao remover um desafio sem informar um token', async () => {
+
+            const response = await request(process.env.API_BASE_URL)
+            .delete('/challenges/21')
+            .set('Content-Type', 'application/json')
+
+            expect(response.statusCode).to.be.eql(401);
+            expect(response.body.error).to.be.equal('Token não fornecido');
         });
     });
 });

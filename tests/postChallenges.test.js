@@ -3,7 +3,7 @@ const { expect } = require('chai');
 const { cadastrarAdmin, cadastrarAluno } = require('../helpers/cadastrarUsuario');
 const { gerarTokenAdmin, gerarTokenAluno } = require('../helpers/gerarToken');
 const postDesafiosSemCupomExtra = require('../fixtures/postDesafiosSemCupomExtra.json');
-const postDesafiosComCupomExtra = require('../fixtures/postDesafiosSemCupomExtra.json');
+const postDesafiosComCupomExtra = require('../fixtures/postDesafiosComCupomExtra.json');
 require('dotenv').config();
 
 describe('Cadastrar Desafios', () => {
