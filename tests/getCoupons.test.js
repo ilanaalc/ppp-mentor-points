@@ -2,10 +2,9 @@ const request = require('supertest');
 const { expect } = require('chai');
 const { cadastrarAdmin, cadastrarAluno } = require('../helpers/cadastrarUsuario');
 const { gerarTokenAdmin, gerarTokenAluno } = require('../helpers/gerarToken');
-const { cadastrarDesafioComCupomExtra} = require('../helpers/cadastrarDesafio');
 require('dotenv').config();
 
-describe('Consultar Cupons', () => {
+describe('Consultar Cupons por Aluno', () => {
     describe('GET /coupons/{userId}', () => {
         it('039 - Deve retornar 200 ao consultar cupons gerados para um aluno com credenciais de administrador', async () => {
             await cadastrarAluno();
