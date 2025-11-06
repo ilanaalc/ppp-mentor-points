@@ -15,14 +15,28 @@ jobs:
 
     steps:
     
-    - name: Checkout do Repositório
+    - name: Checkout do repositório
       uses: actions/checkout@v4
 
     - name: Instalando as dependências
       run: npm install 
+
+    - name: Instalar dependências do relatório mochawesome
+      run: npm install -g mochawesome-merge mochawesome-report-generator
 
     - name: Iniciando o servidor
       run: npm run dev &
     
     - name: Executando os testes
       run: npm run test
+      
+    - name: Mesclando relatórios JSON e Gerando HTML
+      run: |
+        npm run report:merge
+        npm run report:html
+
+    - name: Upload do artefato do relatório mochawesome
+      uses: actions/upload-artifact@v4
+      with:
+        name: Relatorio-Mochawesome
+        path: mochawesome-report/mochawesome.html
